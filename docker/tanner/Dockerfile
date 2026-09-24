@@ -3,41 +3,30 @@ FROM alpine:3.15
 # Include dist
 ADD ./docker/tanner/dist/ /root/dist/
 
-# Setup apt
 RUN apk -U --no-cache add \
-               build-base \
-               git \
-               libcap \
-               libffi-dev \
-               libressl-dev \
-               linux-headers \
-               py3-yarl \
-               python3 \
-               python3-dev \
-               py3-pip 
+        build-base \
+        git \
+        libcap \
+        libffi-dev \
+        libressl-dev \
+        linux-headers \
+        py3-yarl \
+        python3 \
+        python3-dev \
+        py3-pip
 
-#COPY the tanner dir
 COPY ./tanner /opt/tanner
-# Setup Tanner
+
 RUN cp /root/dist/config.yaml /opt/tanner/tanner/data/ && \
-    cd /opt/tanner/ && \
-    python3 -m venv tanner-env && \
-    source /opt/tanner/tanner-env/bin/activate && \
-    pip install --upgrade pip && \
-    pip3 install --no-cache-dir wheel && \
-    pip3 install --no-cache-dir -r requirements.txt && \
-    python3 setup.py install && \
-    cd / && \
-# Setup configs, user, groups
+    python3 -m venv /opt/tanner/tanner-env && \
+    /opt/tanner/tanner-env/bin/pip install --upgrade pip && \
+    /opt/tanner/tanner-env/bin/pip install --no-cache-dir wheel && \
+    /opt/tanner/tanner-env/bin/pip install --no-cache-dir -r /opt/tanner/requirements.txt && \
+    cd /opt/tanner && \
+    /opt/tanner/tanner-env/bin/python setup.py install && \
     chown -R nobody:nobody /opt/tanner && \
-# Clean up
-    apk del --purge \
-            build-base \
-            linux-headers \
-            python3-dev && \
-    rm -rf /root/* && \
-    rm -rf /tmp/* /var/tmp/* && \
-    rm -rf /var/cache/apk/*
+    apk del --purge build-base linux-headers python3-dev && \
+    rm -rf /root/* /tmp/* /var/tmp/* /var/cache/apk/*
 
 # Start tanner
 USER nobody:nobody
