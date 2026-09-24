@@ -17,7 +17,7 @@ RUN apk -U --no-cache add \
                py3-pip 
 
 #COPY the tanner dir
-COPY ../../tanner /opt/tanner
+COPY ./tanner /opt/tanner
 # Setup Tanner
 RUN cp /root/dist/config.yaml /opt/tanner/tanner/data/ && \
     cd /opt/tanner/ && \
