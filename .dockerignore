@@ -1,0 +1,10 @@
+.github/
+.pytest_cache/
+docker/
+.coverage
+.dockerignore
+.gitignore
+LICENSE
+README.md
+**/__pycache__/
+.venv/

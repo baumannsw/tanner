@@ -11,15 +11,15 @@ setup(
     packages=find_packages(exclude=["*.pyc"]),
     scripts=["bin/tanner", "bin/tannerweb", "bin/tannerapi"],
     data_files=[
-        ("/opt/tanner/db/", ["tanner/data/db_config.json", "tanner/data/GeoLite2-City.mmdb"]),
+        ("/opt/tanner/db/", ["/opt/tanner/data/db_config.json", "/opt/tanner/data/GeoLite2-City.mmdb"]),
         (
             "/opt/tanner/data/",
             [
-                "tanner/data/dorks.pickle",
-                "tanner/data/crawler_user_agents.txt",
-                "tanner/files/engines/mako.py",
-                "tanner/files/engines/tornado.py",
-                "tanner/data/config.yaml",
+                "/opt/tanner/data/dorks.pickle",
+                "/opt/tanner/data/crawler_user_agents.txt",
+                "/opt/tanner/files/engines/mako.py",
+                "/opt/tanner/files/engines/tornado.py",
+                "/opt/tanner/data/config.yaml",
             ],
         ),
     ],
