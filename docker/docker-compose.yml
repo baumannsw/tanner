@@ -77,6 +77,7 @@ services:
     build: ./tanner
     environment:
       - PATH=/opt/tanner/tanner-env/bin/:$PATH
+      - TANNER__REDIS__PORT=6380 #Double-underscore names take precedence.
     container_name: tanner
     restart: always
     stop_signal: SIGKILL

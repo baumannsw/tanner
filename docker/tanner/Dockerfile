@@ -1,7 +1,7 @@
 FROM alpine:3.15
 
 # Include dist
-ADD docker/tanner/dist/ /root/dist/
+ADD ./docker/tanner/dist/ /root/dist/
 
 # Setup apt
 RUN apk -U --no-cache add \
