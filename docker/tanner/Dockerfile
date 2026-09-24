@@ -14,10 +14,12 @@ RUN apk -U --no-cache add \
                py3-yarl \
                python3 \
                python3-dev \
-               py3-pip && \
+               py3-pip 
+
+#COPY the tanner dir
+COPY ../../tanner /opt/tanner
 # Setup Tanner
-    git clone --depth=1 https://github.com/mushorg/tanner /opt/tanner && \
-    cp /root/dist/config.yaml /opt/tanner/tanner/data/ && \
+RUN cp /root/dist/config.yaml /opt/tanner/tanner/data/ && \
     cd /opt/tanner/ && \
     python3 -m venv tanner-env && \
     source /opt/tanner/tanner-env/bin/activate && \

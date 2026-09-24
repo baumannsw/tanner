@@ -81,3 +81,25 @@ class TestConfig(unittest.TestCase):
             for value, assertion_data in config_template[section].items():
                 data = config.TannerConfig.get(section, value)
                 self.assertEqual(data, assertion_data)
+
+    @mock.patch.dict(
+        os.environ,
+        {
+            "TANNER__REDIS__PORT": "6380",
+            "TANNER_API_AUTH": "true",
+            "TANNER__HPFEEDS__CHANNEL": "events.test",
+        },
+        clear=False,
+    )
+    def test_environment_overrides_yaml_values(self):
+        config_values = config.TannerConfig.read_config("/opt/tanner/data/config.yaml")
+
+        self.assertEqual(config_values["REDIS"]["port"], 6380)
+        self.assertIs(config_values["API"]["auth"], True)
+        self.assertEqual(config_values["HPFEEDS"]["CHANNEL"], "events.test")
+
+    @mock.patch.dict(os.environ, {"TANNER__REDIS__PORT": "6380", "TANNER_REDIS_PORT": "6381"}, clear=False)
+    def test_double_underscore_environment_name_takes_precedence(self):
+        config_values = config.TannerConfig.read_config("/opt/tanner/data/config.yaml")
+
+        self.assertEqual(config_values["REDIS"]["port"], 6380)

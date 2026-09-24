@@ -2,6 +2,13 @@ Configuration file
 ==================
 Tanner uses ``YAML`` like format for configuration file. It's value can specified by using ``config`` flag.
 
+Every setting can also be overridden when Tanner starts with an environment variable.
+Use ``TANNER__<SECTION>__<SETTING>`` (for example, ``TANNER__REDIS__PORT=6380``).
+The single-underscore form (``TANNER_REDIS_PORT``) is supported as an alias.
+Environment values are parsed as YAML, so values such as ``false`` and ``6380``
+become a boolean and an integer respectively. The double-underscore form takes
+precedence when both forms are set.
+
 The use of ``INI`` configuration file is obsolete now.
 
 There are 8 different sections :
