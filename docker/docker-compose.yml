@@ -2,7 +2,7 @@ networks:
   tanner_local:
 
 x-tanner-environment: &tanner-environment
-  PATH: /opt/tanner/tanner-env/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  PATH: /opt/tanner/.venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
   TANNER__DATA__DB_CONFIG: "${TANNER__DATA__DB_CONFIG:-/opt/tanner/db/db_config.json}"
   TANNER__DATA__DORKS: "${TANNER__DATA__DORKS:-/opt/tanner/data/dorks.pickle}"
   TANNER__DATA__USER_DORKS: "${TANNER__DATA__USER_DORKS:-/opt/tanner/data/user_dorks.pickle}"
