@@ -22,7 +22,7 @@ EOF
 COPY ./tanner /opt/tanner
 
 RUN <<'EOF'
-cp /root/dist/config.yaml /opt/tanner/tanner/data/
+cp /root/dist/config.yaml /opt/tanner/data/
 python3 -m venv /opt/tanner/tanner-env
 cd /opt/tanner
 /opt/tanner/tanner-env/bin/pip install --upgrade pip
@@ -37,5 +37,5 @@ EOF
 # Start tanner
 USER nobody:nobody
 WORKDIR /opt/tanner
-CMD ["/opt/tanner/tanner-env/bin/tanner", "--config", "/opt/tanner/tanner/data/config.yaml"]
+CMD ["/opt/tanner/tanner-env/bin/tanner", "--config", "/opt/tanner/data/config.yaml"]
 
