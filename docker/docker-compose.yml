@@ -1,7 +1,63 @@
-version: '2.3'
-
 networks:
   tanner_local:
+
+x-tanner-environment: &tanner-environment
+  PATH: /opt/tanner/tanner-env/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  TANNER__DATA__DB_CONFIG: "${TANNER__DATA__DB_CONFIG:-/opt/tanner/db/db_config.json}"
+  TANNER__DATA__DORKS: "${TANNER__DATA__DORKS:-/opt/tanner/data/dorks.pickle}"
+  TANNER__DATA__USER_DORKS: "${TANNER__DATA__USER_DORKS:-/opt/tanner/data/user_dorks.pickle}"
+  TANNER__DATA__CRAWLER_STATS: "${TANNER__DATA__CRAWLER_STATS:-/opt/tanner/data/crawler_user_agents.txt}"
+  TANNER__DATA__GEO_DB: "${TANNER__DATA__GEO_DB:-/opt/tanner/db/GeoLite2-City.mmdb}"
+  TANNER__DATA__TORNADO: "${TANNER__DATA__TORNADO:-/opt/tanner/data/tornado.py}"
+  TANNER__DATA__MAKO: "${TANNER__DATA__MAKO:-/opt/tanner/data/mako.py}"
+  TANNER__TANNER__HOST: "${TANNER__TANNER__HOST:-tanner}"
+  TANNER__TANNER__PORT: "${TANNER__TANNER__PORT:-8090}"
+  TANNER__WEB__HOST: "${TANNER__WEB__HOST:-tanner_web}"
+  TANNER__WEB__PORT: "${TANNER__WEB__PORT:-8091}"
+  TANNER__API__HOST: "${TANNER__API__HOST:-tanner_api}"
+  TANNER__API__PORT: "${TANNER__API__PORT:-8092}"
+  TANNER__API__AUTH: "${TANNER__API__AUTH:-False}"
+  TANNER__API__AUTH_SIGNATURE: "${TANNER__API__AUTH_SIGNATURE:-tanner_api_auth}"
+  TANNER__PHPOX__HOST: "${TANNER__PHPOX__HOST:-tanner_phpox}"
+  TANNER__PHPOX__PORT: "${TANNER__PHPOX__PORT:-8088}"
+  TANNER__REDIS__HOST: "${TANNER__REDIS__HOST:-tanner_redis}"
+  TANNER__REDIS__PORT: "${TANNER__REDIS__PORT:-6380}"
+  TANNER__REDIS__POOLSIZE: "${TANNER__REDIS__POOLSIZE:-80}"
+  TANNER__REDIS__TIMEOUT: "${TANNER__REDIS__TIMEOUT:-1}"
+  TANNER__EMULATORS__ROOT_DIR: "${TANNER__EMULATORS__ROOT_DIR:-/tmp/tanner/emulators}"
+  TANNER__EMULATOR_ENABLED__SQLI: "${TANNER__EMULATOR_ENABLED__SQLI:-True}"
+  TANNER__EMULATOR_ENABLED__RFI: "${TANNER__EMULATOR_ENABLED__RFI:-True}"
+  TANNER__EMULATOR_ENABLED__LFI: "${TANNER__EMULATOR_ENABLED__LFI:-False}"
+  TANNER__EMULATOR_ENABLED__XSS: "${TANNER__EMULATOR_ENABLED__XSS:-True}"
+  TANNER__EMULATOR_ENABLED__CMD_EXEC: "${TANNER__EMULATOR_ENABLED__CMD_EXEC:-False}"
+  TANNER__EMULATOR_ENABLED__PHP_CODE_INJECTION: "${TANNER__EMULATOR_ENABLED__PHP_CODE_INJECTION:-True}"
+  TANNER__EMULATOR_ENABLED__PHP_OBJECT_INJECTION: "${TANNER__EMULATOR_ENABLED__PHP_OBJECT_INJECTION:-True}"
+  TANNER__EMULATOR_ENABLED__CRLF: "${TANNER__EMULATOR_ENABLED__CRLF:-True}"
+  TANNER__EMULATOR_ENABLED__XXE_INJECTION: "${TANNER__EMULATOR_ENABLED__XXE_INJECTION:-True}"
+  TANNER__EMULATOR_ENABLED__TEMPLATE_INJECTION: "${TANNER__EMULATOR_ENABLED__TEMPLATE_INJECTION:-False}"
+  TANNER__SQLI__TYPE: "${TANNER__SQLI__TYPE:-SQLITE}"
+  TANNER__SQLI__DB_NAME: "${TANNER__SQLI__DB_NAME:-tanner_db}"
+  TANNER__SQLI__HOST: "${TANNER__SQLI__HOST:-localhost}"
+  TANNER__SQLI__USER: "${TANNER__SQLI__USER:-root}"
+  TANNER__SQLI__PASSWORD: "${TANNER__SQLI__PASSWORD:-user_pass}"
+  TANNER__XXE_INJECTION__OUT_OF_BAND: "${TANNER__XXE_INJECTION__OUT_OF_BAND:-False}"
+  TANNER__RFI__ALLOW_INSECURE: "${TANNER__RFI__ALLOW_INSECURE:-True}"
+  TANNER__DOCKER__HOST_IMAGE: "${TANNER__DOCKER__HOST_IMAGE:-busybox:latest}"
+  TANNER__LOGGER__LOG_DEBUG: "${TANNER__LOGGER__LOG_DEBUG:-/tmp/tanner/tanner.log}"
+  TANNER__LOGGER__LOG_ERR: "${TANNER__LOGGER__LOG_ERR:-/tmp/tanner/tanner.err}"
+  TANNER__MONGO__ENABLED: "${TANNER__MONGO__ENABLED:-False}"
+  TANNER__MONGO__URI: "${TANNER__MONGO__URI:-mongodb://localhost}"
+  TANNER__HPFEEDS__ENABLED: "${TANNER__HPFEEDS__ENABLED:-False}"
+  TANNER__HPFEEDS__HOST: "${TANNER__HPFEEDS__HOST:-localhost}"
+  TANNER__HPFEEDS__PORT: "${TANNER__HPFEEDS__PORT:-10000}"
+  TANNER__HPFEEDS__IDENT: "${TANNER__HPFEEDS__IDENT:-}"
+  TANNER__HPFEEDS__SECRET: "${TANNER__HPFEEDS__SECRET:-}"
+  TANNER__HPFEEDS__CHANNEL: "${TANNER__HPFEEDS__CHANNEL:-tanner.events}"
+  TANNER__LOCALLOG__ENABLED: "${TANNER__LOCALLOG__ENABLED:-True}"
+  TANNER__LOCALLOG__PATH: "${TANNER__LOCALLOG__PATH:-/tmp/tanner/tanner_report.json}"
+  TANNER__CLEANLOG__ENABLED: "${TANNER__CLEANLOG__ENABLED:-False}"
+  TANNER__REMOTE_DOCKERFILE__GITHUB: "${TANNER__REMOTE_DOCKERFILE__GITHUB:-https://raw.githubusercontent.com/mushorg/tanner/master/docker/tanner/template_injection/Dockerfile}"
+  TANNER__SESSIONS__DELETE_TIMEOUT: "${TANNER__SESSIONS__DELETE_TIMEOUT:-300}"
 
 services:
 
@@ -32,9 +88,10 @@ services:
 
 # Tanner API Service
   tanner_api:
-    build: ./tanner
-    environment:
-      - PATH=/opt/tanner/tanner-env/bin/:$PATH
+    build:
+      context: ..
+      dockerfile: docker/tanner/Dockerfile
+    environment: *tanner-environment
     container_name: tanner_api
     restart: always
     stop_signal: SIGKILL
@@ -52,9 +109,10 @@ services:
 
 # Tanner WEB Service
   tanner_web:
-    build: ./tanner
-    environment:
-      - PATH=/opt/tanner/tanner-env/bin/:$PATH
+    build:
+      context: ..
+      dockerfile: docker/tanner/Dockerfile
+    environment: *tanner-environment
     container_name: tanner_web
     restart: always
     stop_signal: SIGKILL
@@ -74,10 +132,10 @@ services:
 
 # Tanner Service
   tanner:
-    build: ./tanner
-    environment:
-      - PATH=/opt/tanner/tanner-env/bin/:$PATH
-      - TANNER__REDIS__PORT=6380 #Double-underscore names take precedence.
+    build:
+      context: ..
+      dockerfile: docker/tanner/Dockerfile
+    environment: *tanner-environment
     container_name: tanner
     restart: always
     stop_signal: SIGKILL
